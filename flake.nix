@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; # Or your preferred nixpkgs branch
     home-manager = {
-      url = "github:nixos/home-manager";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs"; # Ensures HM uses the same nixpkgs
     };
     # Optional: For dev shells, if you manage projects with flakes too

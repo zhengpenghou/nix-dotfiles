@@ -41,7 +41,7 @@ in
 {
   # This is crucial for Home Manager to know which version's behavior to expect.
   # Update this as you update Home Manager itself and review release notes.
-  home.stateVersion = "24.05"; # Or current stable, e.g., "23.11"
+  home.stateVersion = "25.05"; # Or current stable, e.g., "23.11"
 
   # Set username and home directory (can be overridden by NixOS module if needed)
   home.username = currentUser;

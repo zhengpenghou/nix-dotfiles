@@ -78,7 +78,7 @@ in
   # --- Rust ---
   programs.rustup = {
     enable = true;
-    toolchains = [ "stable", "nightly" ];
+    toolchains = [ "stable" "nightly" ];
     defaultToolchain = "stable";
     components = [ "rust-src" "clippy" "rustfmt" ];
     # target = "wasm32-unknown-unknown"; # Example target

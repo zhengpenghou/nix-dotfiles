@@ -1,64 +1,127 @@
+# ~/nix-dotfiles/flake.nix
 {
-  description = "My Cross-Platform Home and System Configurations";
+  description = "Unified Configuration for All My Machines";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; # Or your preferred nixpkgs branch
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
-      inputs.nixpkgs.follows = "nixpkgs"; # Ensures HM uses the same nixpkgs
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Optional: For dev shells, if you manage projects with flakes too
-    # flake-utils.url = "github:numtide/flake-utils";
+    nix-darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # my-lazyvim-config = { url = "github:yourusername/your-lazyvim-config-repo"; flake = false; };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-darwin, ... }@inputs:
     let
-      # --- Define your users and systems ---
-      macUser = "zhengpenghou"; # Replace
-      macSystem = "aarch64-darwin";  # Or "aarch64-darwin" for Apple Silicon
+      # --- Define your machines and their specific users ---
+      # You can add all your machines here.
+      # The 'hostnameInFlake' is what you'll use in commands like `darwin-rebuild switch --flake .#moose`
+      # The 'username' is the actual username on that system.
+      # The 'configModulePath' points to its system-level configuration file.
+      hosts = {
+        "moose" = { # MacBook Pro
+          system = "aarch64-darwin"; # Verify: aarch64 for Apple Silicon, x86_64 for Intel
+          username = "zhengpenghou";
+          configModulePath = ./system-config/moose/darwin-configuration.nix;
+          type = "darwin";
+        };
+        "fiesty" = { # Mac mini
+          system = "x86_64-darwin";  # Verify: aarch64 for Apple Silicon, x86_64 for Intel
+          username = "zp";
+          configModulePath = ./system-config/fiesty/darwin-configuration.nix;
+          type = "darwin";
+        };
+        "nano" = { # X1 Nano Linux Laptop (NixOS)
+          system = "x86_64-linux";
+          username = "zp";
+          configModulePath = ./system-config/nano/configuration.nix;
+          type = "nixos";
+        };
+        # Example for a Linux server (NixOS)
+        # "server1" = {
+        #   system = "x86_64-linux";
+        #   username = "zp"; # Assuming 'zp' for servers too
+        #   configModulePath = ./system-config/server1/configuration.nix;
+        #   type = "nixos";
+        # };
+        # Example for another Linux laptop (non-NixOS, using standalone Home Manager)
+        # "otherlinuxlaptop" = {
+        #   system = "x86_64-linux";
+        #   username = "zp";
+        #   # For standalone HM, the "module" is the primary home.nix that imports common-home.nix
+        #   # and sets username/homeDirectory directly.
+        #   configModulePath = ./home-config/otherlinuxlaptop-standalone-home.nix;
+        #   type = "home-manager";
+        # };
+      };
 
-      thinkpadUser = "nano"; # Replace
-      thinkpadHostname = "nano"; # Replace with your ThinkPad's hostname for NixOS config
-      thinkpadSystem = "x86_64-linux";
+      # --- Helper to create specialArgs for modules ---
+      mkSpecialArgs = hostEntry: {
+        inherit inputs;
+        currentUser = hostEntry.username; # Pass the host-specific username
+        currentSystemType = hostEntry.type;
+      };
 
-      # Special arguments to pass to Home Manager modules
-      # This allows home.nix to know about the user and system context
-      commonSpecialArgs = { inherit inputs; };
+      # --- Helper to build Home Manager user modules ---
+      # This ensures common-home.nix is always imported.
+      # You can add machine-type specific HM modules here too (e.g., macos-home.nix, linux-home.nix)
+      mkHomeManagerUserModules = hostEntry: {
+        home-manager.users.${hostEntry.username} = {
+          imports = [ ./home-config/common-home.nix ]
+          # Example for OS-specific HM additions:
+          # ++ (lib.optional (hostEntry.type == "darwin") ./home-config/macos-home.nix)
+          # ++ (lib.optional (hostEntry.type == "nixos" || hostEntry.type == "home-manager") ./home-config/linux-home.nix)
+          ;
+        };
+      };
 
     in
     {
-      # --- macOS Home Manager Configuration (Standalone) ---
-      homeConfigurations."${macUser}" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.${macSystem};
-        extraSpecialArgs = commonSpecialArgs // { currentUser = macUser; currentSystem = macSystem; };
-        modules = [
-          ./home-config/common-home.nix
-          # You can add a macos-specific home-manager file here if needed:
-          # ./home-config/macos-home.nix
-        ];
-      };
-
-      # --- NixOS System Configuration (ThinkPad X1 Nano) ---
-      nixosConfigurations."${thinkpadHostname}" = nixpkgs.lib.nixosSystem {
-        system = thinkpadSystem;
-        specialArgs = commonSpecialArgs // { currentUser = thinkpadUser; currentSystem = thinkpadSystem; }; # Pass to NixOS modules
-        modules = [
-          ./system-config/thinkpad/configuration.nix # Main NixOS config for ThinkPad
-          home-manager.nixosModules.home-manager # Integrate Home Manager
-          {
-            # Configure Home Manager for the specific user on NixOS
-            home-manager.users.${thinkpadUser} = {
-              imports = [
-                ./home-config/common-home.nix
-                # You can add a linux-specific home-manager file here if needed:
-                # ./home-config/linux-home.nix
-              ];
-              # Optionally set username and home dir here if not derived or set in common-home.nix
-              # home.username = thinkpadUser;
-              # home.homeDirectory = "/home/${thinkpadUser}";
-            };
+      # --- macOS System Configurations (using nix-darwin) ---
+      darwinConfigurations = nixpkgs.lib.mapAttrs'
+        (hostname: hostEntry: nixpkgs.lib.nameValuePair hostname (
+          nix-darwin.lib.darwinSystem {
+            system = hostEntry.system;
+            specialArgs = mkSpecialArgs hostEntry;
+            modules = [
+              hostEntry.configModulePath
+              home-manager.darwinModules.home-manager
+              (mkHomeManagerUserModules hostEntry) # Use the helper
+            ];
           }
-        ];
-      };
+        ))
+        (nixpkgs.lib.filterAttrs (hostname: hostEntry: hostEntry.type == "darwin") hosts);
+
+      # --- NixOS System Configurations ---
+      nixosConfigurations = nixpkgs.lib.mapAttrs'
+        (hostname: hostEntry: nixpkgs.lib.nameValuePair hostname (
+          nixpkgs.lib.nixosSystem {
+            system = hostEntry.system;
+            specialArgs = mkSpecialArgs hostEntry;
+            modules = [
+              hostEntry.configModulePath
+              home-manager.nixosModules.home-manager
+              (mkHomeManagerUserModules hostEntry) # Use the helper
+            ];
+          }
+        ))
+        (nixpkgs.lib.filterAttrs (hostname: hostEntry: hostEntry.type == "nixos") hosts);
+
+      # --- Standalone Home Manager Configurations (for non-NixOS Linux) ---
+      # homeConfigurations = nixpkgs.lib.mapAttrs'
+      #   (hostname: hostEntry: nixpkgs.lib.nameValuePair "${hostEntry.username}@${hostname}" ( # e.g. zp@otherlinuxlaptop
+      #     home-manager.lib.homeManagerConfiguration {
+      #       pkgs = nixpkgs.legacyPackages.${hostEntry.system};
+      #       extraSpecialArgs = mkSpecialArgs hostEntry; # Passes currentUser
+      #       modules = [
+      #         hostEntry.configModulePath # This would be a home.nix file setting username & importing common-home.nix
+      #       ];
+      #     }
+      #   ))
+      #   (nixpkgs.lib.filterAttrs (hostname: hostEntry: hostEntry.type == "home-manager") hosts);
     };
 }

@@ -6,13 +6,16 @@
     # coreutils # Example: if you want Nix coreutils available system-wide
   ];
 
-  # Auto upgrade nix package and nix binary wrappers.
-  services.nix-daemon.enable = true; # Managed by nix-darwin installer usually
+  # nix-darwin manages the nix-daemon when nix.enable is true (implied by nix.package).
+  # So, services.nix-daemon.enable is not needed.
   nix.package = pkgs.nix; # Ensure Nix itself is managed by Nix
+  nix.enable = true; # Explicitly enable Nix, ensures daemon is managed
 
   # Enable Flakes and the new Nix command system-wide
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.settings.trusted-users = [ "@admin" currentUser ]; # Allow admin group and current user to use restricted features
+  # You might want to add other nix.settings here, for example:
+  # nix.settings.build-users-group = "nixbld";
 
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.bash.enable = true; # Even if you use fish, some scripts might expect bash
@@ -21,7 +24,8 @@
   # Set Git commit hash for darwin-version.
   system.configurationRevision = inputs.self.revShort or "dirty";
 
-  # This is crucial for nix-darwin. Check their documentation for the latest recommended version.
+  # This is crucial for nix-darwin. Use the version recommended by nix-darwin.
+  # You mentioned it defaulted to 6 from its output.
   system.stateVersion = 6;
 
   # Define the user account at the system level.
@@ -29,17 +33,23 @@
   users.users.${currentUser} = {
     name = currentUser;
     home = "/Users/${currentUser}";
-    shell = pkgs.fish; # Set the default login shell for this user
+    shell = pkgs.fish; # System default login shell for the user
   };
 
   # Example macOS specific system settings:
   # system.keyboard.remapCapsLockToControl = true;
-  services.openssh.enable = true; # Enable OpenSSH server
-  security.pam.enableSudoTouchIdAuth = true; # Enable Touch ID for sudo
+
+  # Enable OpenSSH server
+  services.openssh.enable = true;
+  # services.openssh.permitRootLogin = "no"; # Example further sshd config
+
+  # Enable Touch ID for sudo (using the new option name)
+  security.pam.services.sudo_local.touchIdAuth = true; # Corrected option name
 
   # Allow unfree packages system-wide if needed for system packages or services
   nixpkgs.config.allowUnfree = true;
 
-  # Ensure fonts from Home Manager are discoverable by system applications
-  fonts.fontDir.enable = true;
+  # fonts.fontDir.enable is no longer needed or effective.
+  # Fonts installed by Home Manager (e.g., to ~/.nix-profile/share/fonts or ~/Library/Fonts)
+  # or system-wide (to /Library/Fonts) should be picked up automatically by macOS.
 }

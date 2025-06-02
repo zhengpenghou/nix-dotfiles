@@ -34,7 +34,7 @@
 
   # Example macOS specific system settings:
   # system.keyboard.remapCapsLockToControl = true;
-  services.ssh.enable = true; # Enable OpenSSH server
+  services.openssh.enable = true; # Enable OpenSSH server
   security.pam.enableSudoTouchIdAuth = true; # Enable Touch ID for sudo
 
   # Allow unfree packages system-wide if needed for system packages or services

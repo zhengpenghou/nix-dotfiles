@@ -97,7 +97,38 @@ in
     source = ./nvim-config; # This expects ~/nix-dotfiles/home-config/nvim-config/
     recursive = true;
   };
-  programs.kitty = { /* ... */ };
+  programs.kitty = {
+    enable = true;
+    font = {
+      name = "JetBrainsMono Nerd Font";
+      size = 12.0;
+    };
+    settings = lib.mkMerge [
+      { # Base settings (always applied)
+        # Explicitly set the shell for Kitty to use the Nix-provided Fish
+        shell = "${pkgs.fish}/bin/fish"; # <--- ADD THIS LINE
+
+        background = "#282A36";
+        foreground = "#F8F8F2";
+        cursor     = "#F8F8F2";
+        confirm_os_window_close = 0;
+        scrollback_lines = 10000;
+        enable_audio_bell = false;
+        update_check_interval = 0;
+        tab_bar_edge = "bottom";
+        tab_bar_style = "powerline";
+        tab_powerline_style = "slanted";
+        remember_window_size = "yes";
+        initial_window_width = "100c";
+        initial_window_height = "40c";
+        shell_integration = "enabled";
+      }
+      (lib.mkIf isMacOS {
+        macos_option_as_alt = "yes";
+      })
+    ];
+    # shellIntegration.enable = true; # This is handled by shell_integration = "enabled"; in settings now
+  };
 
   # Font configuration for Linux (still commented out - address after major errors are gone)
   # home.fontconfig.enable = lib.mkIf isLinux true;

@@ -24,6 +24,13 @@
   # Set Git commit hash for darwin-version.
   system.configurationRevision = inputs.self.revShort or "dirty";
 
+  # Register Nix-provided shells as valid login shells
+  environment.shells = [
+    pkgs.fish  # The fish you want for your user
+    pkgs.bash  # Good to keep bash available
+    pkgs.zsh   # Good to keep zsh available
+  ];
+
   # This is crucial for nix-darwin. Use the version recommended by nix-darwin.
   # You mentioned it defaulted to 6 from its output.
   system.stateVersion = 6;

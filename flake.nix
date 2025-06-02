@@ -67,6 +67,7 @@
                   # home.username = hostEntry.username;
                   # home.homeDirectory = "/Users/${hostEntry.username}";
                 };
+              home-manager.backupFileExtension = "hm-backup";
               }
             ];
           }
@@ -92,6 +93,7 @@
                   # home.username = hostEntry.username;
                   # home.homeDirectory = "/home/${hostEntry.username}";
                 };
+              home-manager.backupFileExtension = "hm-backup";
               }
             ];
           }

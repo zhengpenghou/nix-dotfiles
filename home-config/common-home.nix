@@ -92,7 +92,10 @@ in
   };
 
   programs.neovim = { /* ... */ };
-  xdg.configFile."nvim" = { /* ... */ };
+	xdg.configFile."nvim" = {
+    source = ./nvim-config; # This expects ~/nix-dotfiles/home-config/nvim-config/
+    recursive = true;
+  };
   programs.kitty = { /* ... */ };
 
   # Font configuration for Linux (still commented out - address after major errors are gone)

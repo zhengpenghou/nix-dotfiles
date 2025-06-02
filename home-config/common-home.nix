@@ -169,7 +169,6 @@ in
         color17 = "#FF5D62";
 
         # Retained from previous template (important)
-        shell = "${pkgs.fish}/bin/fish"; # Ensures Kitty uses Nix Fish
         update_check_interval = 0; # Keep this if you want to disable Kitty's own checks
         remember_window_size = "yes";
         initial_window_width = "100c";

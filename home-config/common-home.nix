@@ -226,9 +226,6 @@ in
     '';
   };
 
-    # shellIntegration.enable = true; # This is handled by shell_integration = "enabled"; in settings now
-  };
-
   # Font configuration for Linux (still commented out - address after major errors are gone)
   # home.fontconfig.enable = lib.mkIf isLinux true;
 

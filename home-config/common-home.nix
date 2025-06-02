@@ -45,6 +45,7 @@ in
     pkgs.marksman pkgs.stylua pkgs.nodePackages.prettier
     # Fonts
     pkgs.nerd-fonts.jetbrains-mono 
+    pkgs.roboto-mono
   ] ++ windsurfPackages;
 
   #programs.rustup = {
@@ -97,36 +98,134 @@ in
     source = ./nvim-config; # This expects ~/nix-dotfiles/home-config/nvim-config/
     recursive = true;
   };
-  programs.kitty = {
+
+    programs.kitty = {
     enable = true;
     font = {
-      name = "JetBrainsMono Nerd Font";
-      size = 14.0;
+      name = "Roboto Mono"; # From your new config
+      package = pkgs.roboto-mono; # Ensures this font is available
+      size = 15;
     };
-    settings = lib.mkMerge [
-      { # Base settings (always applied)
-        # Explicitly set the shell for Kitty to use the Nix-provided Fish
-        shell = "${pkgs.fish}/bin/fish"; # <--- ADD THIS LINE
 
-        background = "#282A36";
-        foreground = "#F8F8F2";
-        cursor     = "#F8F8F2";
-        confirm_os_window_close = 0;
-        scrollback_lines = 10000;
-        enable_audio_bell = false;
-        update_check_interval = 0;
+    settings = lib.mkMerge [
+      { # Base settings merged from your new config and previous template
+        # From your new settings block & extraConfig:
+        allow_remote_control = true; # Was also in extraConfig, prefer typed setting
+        window_padding_width = 15;   # Was also in extraConfig
+        enable_audio_bell = false;   # Was also in extraConfig as 'no'
+        copy_on_select = "yes";
+        macos_thicken_font = 0.25; # Moved from extraConfig
+        listen_on = "unix:/tmp/mykitty"; # Moved from extraConfig
+        hide_window_decorations = "titlebar-only"; # Moved from extraConfig
+        placement_strategy = "top-left"; # Moved from extraConfig
+        mouse_hide_wait = 3.0; # Moved from extraConfig
+        scrollback_pager_history_size = 4000; # Moved from extraConfig
+        repaint_delay = 10; # Moved from extraConfig
+        input_delay = 3; # Moved from extraConfig
+        sync_to_monitor = "yes"; # Moved from extraConfig
+        window_border_width = "1pt"; # Moved from extraConfig
+        active_border_color = "#41413d"; # Moved from extraConfig
+        inactive_border_color = "#1F1F2A"; # Moved from extraConfig
+        confirm_os_window_close = -1; # Moved from extraConfig (use number for -1)
+        shell_integration = "no-cursor"; # From your extraConfig, overrides previous "enabled"
+        cursor_shape = "beam"; # Moved from extraConfig
+
+        # Tab bar settings from your extraConfig (and some from previous template)
         tab_bar_edge = "bottom";
-        tab_bar_style = "powerline";
-        tab_powerline_style = "slanted";
+        tab_bar_style = "separator";
+        tab_separator = "";
+        tab_title_template = "  {title}  ";
+        active_tab_font_style = "normal"; # Moved from extraConfig
+
+        # Colors from your extraConfig
+        background = "#0D1014";
+        foreground = "#DCD7BA";
+        selection_background = "#2D4F67";
+        selection_foreground = "#C8C093";
+        url_color = "#72A7BC";
+        cursor = "#C8C093"; # This will override the one from my previous template
+        active_tab_background = "#16161D";
+        active_tab_foreground = "#DCD7BA";
+        inactive_tab_foreground = "#727169";
+        inactive_tab_background = "#0D1014";
+        color0 = "#090618";
+        color1 = "#C34043";
+        color2 = "#76946A";
+        color3 = "#C0A36E";
+        color4 = "#7E9CD8";
+        color5 = "#957FB8";
+        color6 = "#6A9589";
+        color7 = "#C8C093";
+        color8 = "#727169";
+        color9 = "#E82424";
+        color10 = "#98BB6C";
+        color11 = "#E6C384";
+        color12 = "#7FB4CA";
+        color13 = "#938AA9";
+        color14 = "#7AA89F";
+        color15 = "#DCD7BA";
+        color16 = "#FFA066";
+        color17 = "#FF5D62";
+
+        # Retained from previous template (important)
+        shell = "${pkgs.fish}/bin/fish"; # Ensures Kitty uses Nix Fish
+        update_check_interval = 0; # Keep this if you want to disable Kitty's own checks
         remember_window_size = "yes";
         initial_window_width = "100c";
         initial_window_height = "40c";
-        shell_integration = "enabled";
       }
+      # Conditionally add macOS-specific settings
       (lib.mkIf isMacOS {
-        macos_option_as_alt = "yes";
+        macos_option_as_alt = "yes"; # From your extraConfig, handled conditionally here
       })
     ];
+
+    extraConfig = ''
+      # Settings that are complex, multi-line, or not easily typed,
+      # or that you prefer to keep as raw kitty.conf lines.
+      # Duplicates from settings above have been removed.
+
+      # Font fallbacks - these font_family lines might be needed if the main font block
+      # doesn't handle variants perfectly, or if Roboto Mono doesn't have bold/italic shapes
+      # that Kitty picks up. For now, assuming the `font` block is primary.
+      # If you find bold/italic not working, you can uncomment these.
+      # font_family         Roboto Mono Regular
+      # bold_font           Roboto Mono Bold
+      # italic_font         Roboto Mono Italic
+      # bold_italic_font    Roboto Mono Bold Italic
+
+      symbol_map U+ea60-U+ebd1 codicon # From your extraConfig
+
+      # Symbol Nerd Font mappings from your extraConfig
+      symbol_map U+E5FA-U+E62B Symbols Nerd Font
+      symbol_map U+E700-U+E7C5 Symbols Nerd Font
+      symbol_map U+F000-U+F2E0 Symbols Nerd Font
+      symbol_map U+E200-U+E2A9 Symbols Nerd Font
+      symbol_map U+F500-U+FD46 Symbols Nerd Font
+      symbol_map U+E300-U+E3EB Symbols Nerd Font
+      symbol_map U+F400-U+F4A8,U+2665,U+26A1,U+F27C Symbols Nerd Font
+      symbol_map U+E0A3,U+E0B4-U+E0C8,U+E0CC-U+E0D2,U+E0D4 Symbols Nerd Font
+      symbol_map U+23FB-U+23FE,U+2b58 Symbols Nerd Font
+      symbol_map U+F300-U+F313 Symbols Nerd Font
+      symbol_map U+E000-U+E00D Symbols Nerd Font
+
+      mouse_map left click ungrabbed mouse_click_url_or_select
+
+      map alt+3 send_text all #
+
+      enabled_layouts splits:split_axis=horizontal
+
+      map ctrl+shift+r combine : clear_terminal active : send_text normal \x0c
+
+      map alt+h  kitten pass_keys.py neighboring_window left alt+h
+      map alt+l  kitten pass_keys.py neighboring_window right alt+l
+      map alt+k  kitten pass_keys.py neighboring_window top alt+k
+      map alt+j  kitten pass_keys.py neighboring_window bottom alt+j
+
+      map cmd+t new_tab_with_cwd
+    '';
+  };
+
     # shellIntegration.enable = true; # This is handled by shell_integration = "enabled"; in settings now
   };
 

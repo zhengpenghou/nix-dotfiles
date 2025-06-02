@@ -110,6 +110,7 @@ in
     settings = lib.mkMerge [
       { # Base settings merged from your new config and previous template
         # From your new settings block & extraConfig:
+        shell = "${pkgs.fish}/bin/fish";
         allow_remote_control = true; # Was also in extraConfig, prefer typed setting
         window_padding_width = 15;   # Was also in extraConfig
         enable_audio_bell = false;   # Was also in extraConfig as 'no'

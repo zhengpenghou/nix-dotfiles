@@ -101,7 +101,7 @@ in
     enable = true;
     font = {
       name = "JetBrainsMono Nerd Font";
-      size = 12.0;
+      size = 14.0;
     };
     settings = lib.mkMerge [
       { # Base settings (always applied)

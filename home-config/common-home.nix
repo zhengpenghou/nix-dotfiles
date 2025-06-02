@@ -120,7 +120,7 @@ in
     settings = lib.mkMerge [
       { # Base settings merged from your new config and previous template
         # From your new settings block & extraConfig:
-        shell = "${pkgs.fish}/bin/fish";
+        shell = "${pkgs.fish}/bin/fish";  # Canonical Nix path to fish
         allow_remote_control = true; # Was also in extraConfig, prefer typed setting
         window_padding_width = 15;   # Was also in extraConfig
         enable_audio_bell = false;   # Was also in extraConfig as 'no'
@@ -138,7 +138,7 @@ in
         active_border_color = "#41413d"; # Moved from extraConfig
         inactive_border_color = "#1F1F2A"; # Moved from extraConfig
         confirm_os_window_close = -1; # Moved from extraConfig (use number for -1)
-        shell_integration = "no-cursor"; # From your extraConfig, overrides previous "enabled"
+        shell_integration = "no-rc no-cursor"; # Combined shell integration settings
         cursor_shape = "beam"; # Moved from extraConfig
 
         # Tab bar settings from your extraConfig (and some from previous template)

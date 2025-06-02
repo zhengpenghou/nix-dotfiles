@@ -162,7 +162,7 @@ in
       initial_window_height = "40c"; # Initial window height in character cells
     };
     shellIntegration.enable = true; # Enable shell integration (recommended)
-    macosOptionAsAlt = lib.mkIf isMacOS true; # Map Option key to Alt on macOS
+    macosOptionAsAlt = lib.mkIf isMacOS yes; # Map Option key to Alt on macOS
   };
 
   # Enable font discovery for Home Manager managed fonts, especially on Linux

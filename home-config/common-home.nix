@@ -166,9 +166,10 @@ in
   };
 
   # Enable font discovery for Home Manager managed fonts, especially on Linux
-  home.fonts.fontProfiles = lib.mkIf isLinux {
-    enable = true;
-  };
+  #home.fonts.fontProfiles = lib.mkIf isLinux {
+  #  enable = true;
+  #};
+  home.fontconfig.enable = lib.mkIf isLinux true;
 
   home.sessionVariables = {
     EDITOR = "nvim";

@@ -160,13 +160,14 @@ in
         remember_window_size = "yes";
         initial_window_width = "100c";
         initial_window_height = "40c";
+        shell_integration = "enabled";
       }
       # Conditionally add macOS-specific settings
       (lib.mkIf isMacOS {
         macos_option_as_alt = "yes"; # This is the kitty.conf option name
       })
     ];
-    shellIntegration.enable = true;
+    # shellIntegration.enable = true;
     # Removed top-level macosOptionAsAlt as it's now in settings
   };
 

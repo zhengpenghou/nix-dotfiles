@@ -57,40 +57,40 @@ in
   programs.fish = { /* ... */ };
   programs.git = { /* ... */ };
 
-  programs.vscode = {
-    enable = true;
-    package = vscodeInsidersPackage; # This installs the specified package
-    commandName = "code-insiders";
-    # Updated paths for extensions and userSettings for HM 25.05+
-    profiles.default = {
-      extensions = commonExtensions;
-      userSettings = {
-        "workbench.colorTheme" = "Default Light Modern";
-        "redhat.telemetry.enabled" = false;
-        "github.copilot.advanced" = {};
-        "github.copilot.chat.followUps" = "always";
-        "github.copilot.chat.localeOverride" = "en";
-        "github.copilot.nextEditSuggestions.enabled" = true;
-        "github.copilot.chat.codesearch.enabled" = true;
-        "github.copilot.chat.agent.thinkingTool" = true;
-        "github.copilot.chat.generateTests.codeLens" = true;
-        "github.copilot.chat.languageContext.fix.typescript.enabled" = true;
-        "github.copilot.chat.languageContext.inline.typescript.enabled" = true;
-        "github.copilot.chat.languageContext.typescript.enabled" = true;
-        "github.copilot.chat.codeGeneration.useInstructionFiles" = true;
-        "roo-cline.allowedCommands" = [ "npm test" "npm install" "tsc" "git log" "git diff" "git show" "cat" ];
-        "editor.fontFamily" = "'JetBrainsMono Nerd Font', 'monospace'";
-        "editor.formatOnSave" = true;
-        "files.autoSave" = "afterDelay";
-        "workbench.startupEditor" = "none";
-        "[nix]" = { "editor.defaultFormatter" = "bbenoist.nix"; };
-        "[python]" = { "editor.defaultFormatter" = "charliermarsh.ruff"; };
-        "[rust]" = { "editor.defaultFormatter" = "rust-lang.rust-analyzer"; };
-        "[typescript]" = { "editor.defaultFormatter" = "esbenp.prettier-vscode"; };
-        "[go]" = { "editor.defaultFormatter" = "golang.go"; "editor.formatOnSave" = true; };
-      };
-    };
-  };
+  #programs.vscode = {
+  #  enable = true;
+  #  package = vscodeInsidersPackage; # This installs the specified package
+  #  commandName = "code-insiders";
+  #  # Updated paths for extensions and userSettings for HM 25.05+
+  #  profiles.default = {
+  #    extensions = commonExtensions;
+  #    userSettings = {
+  #      "workbench.colorTheme" = "Default Light Modern";
+  #      "redhat.telemetry.enabled" = false;
+  #      "github.copilot.advanced" = {};
+  #      "github.copilot.chat.followUps" = "always";
+  #      "github.copilot.chat.localeOverride" = "en";
+  #      "github.copilot.nextEditSuggestions.enabled" = true;
+  #      "github.copilot.chat.codesearch.enabled" = true;
+  #      "github.copilot.chat.agent.thinkingTool" = true;
+  #      "github.copilot.chat.generateTests.codeLens" = true;
+  #      "github.copilot.chat.languageContext.fix.typescript.enabled" = true;
+  #      "github.copilot.chat.languageContext.inline.typescript.enabled" = true;
+  #      "github.copilot.chat.languageContext.typescript.enabled" = true;
+  #      "github.copilot.chat.codeGeneration.useInstructionFiles" = true;
+  #      "roo-cline.allowedCommands" = [ "npm test" "npm install" "tsc" "git log" "git diff" "git show" "cat" ];
+  #      "editor.fontFamily" = "'JetBrainsMono Nerd Font', 'monospace'";
+  #      "editor.formatOnSave" = true;
+  #      "files.autoSave" = "afterDelay";
+  #      "workbench.startupEditor" = "none";
+  #      "[nix]" = { "editor.defaultFormatter" = "bbenoist.nix"; };
+  #      "[python]" = { "editor.defaultFormatter" = "charliermarsh.ruff"; };
+  #      "[rust]" = { "editor.defaultFormatter" = "rust-lang.rust-analyzer"; };
+  #      "[typescript]" = { "editor.defaultFormatter" = "esbenp.prettier-vscode"; };
+  #      "[go]" = { "editor.defaultFormatter" = "golang.go"; "editor.formatOnSave" = true; };
+  #    };
+  #  };
+  #};
 
   programs.neovim = { /* ... */ };
 	xdg.configFile."nvim" = {

@@ -55,7 +55,17 @@ in
   #  components = [ "rust-src" "clippy" "rustfmt" ];
   #}; # programs.rustup was previously commented out, assuming you've uncommented it or it wasn't the cause.
 
-  programs.fish = { /* ... */ };
+  programs.fish = {
+    enable = true; # Make absolutely sure this is true
+    interactiveShellInit = ''
+      set -x EDITOR nvim
+      alias ls='eza --git --icons --color=always'
+      alias cat='bat --paging=never'
+      # Add a new test echo line here for the next build:
+      echo "Fish config from Home Manager - Test v2" 
+    '';
+    # Any other Fish plugins or settings you might have
+  };
   programs.git = { /* ... */ };
 
   #programs.vscode = {

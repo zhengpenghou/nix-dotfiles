@@ -71,16 +71,16 @@ in
     enable = true;
     interactiveShellInit = ''
       set -x EDITOR nvim
-      alias ls='eza --git --icons --color=always' # Added --color=always for consistency
-      alias cat='bat --paging=never' # Added --paging=never for direct output
+      alias ls='eza --git --icons --color=always'
+      alias cat='bat --paging=never'
       # You can add more aliases or functions here
     '';
   };
 
   programs.git = {
     enable = true;
-    userName = "Zhengpeng Hou"; # Your Name
-    userEmail = "zhengpeng.hou@gmail.com"; # Your Email
+    userName = "Zhengpeng Hou";
+    userEmail = "zhengpeng.hou@gmail.com";
     extraConfig = {
       init.defaultBranch = "main";
       pull.rebase = true;
@@ -97,7 +97,7 @@ in
 
   programs.vscode = {
     enable = true;
-    package = pkgs.vscode-insiders; # Ensure this is the package you want to configure
+    package = pkgs.vscode-insiders;
     extensions = commonExtensions;
     userSettings = {
       "workbench.colorTheme" = "Default Light Modern";
@@ -114,11 +114,11 @@ in
       "github.copilot.chat.languageContext.typescript.enabled" = true;
       "github.copilot.chat.codeGeneration.useInstructionFiles" = true;
       "roo-cline.allowedCommands" = [ "npm test" "npm install" "tsc" "git log" "git diff" "git show" "cat" ];
-      "editor.fontFamily" = "'JetBrainsMono Nerd Font', 'monospace'"; # Ensure font name matches installed one
+      "editor.fontFamily" = "'JetBrainsMono Nerd Font', 'monospace'";
       "editor.formatOnSave" = true;
       "files.autoSave" = "afterDelay";
       "workbench.startupEditor" = "none";
-      "[nix]" = { "editor.defaultFormatter" = "bbenoist.nix"; }; # or jnoortheen.nix-ide
+      "[nix]" = { "editor.defaultFormatter" = "bbenoist.nix"; };
       "[python]" = { "editor.defaultFormatter" = "charliermarsh.ruff"; };
       "[rust]" = { "editor.defaultFormatter" = "rust-lang.rust-analyzer"; };
       "[typescript]" = { "editor.defaultFormatter" = "esbenp.prettier-vscode"; };
@@ -131,52 +131,54 @@ in
     package = pkgs.neovim;
     withPython3 = true;
     withNodeJs = true;
-    defaultEditor = true; # Sets Neovim as $EDITOR and $VISUAL
+    defaultEditor = true;
   };
 
-  # Link your LazyVim configuration (assumes it's in ./nvim-config relative to this file)
   xdg.configFile."nvim" = {
-    source = ./nvim-config; # This expects ~/nix-dotfiles/home-config/nvim-config/
+    source = ./nvim-config; # Expects ~/nix-dotfiles/home-config/nvim-config/
     recursive = true;
   };
 
   programs.kitty = {
     enable = true;
     font = {
-      name = "JetBrainsMono Nerd Font"; # Ensure this matches the font installed by nerdfonts
+      name = "JetBrainsMono Nerd Font";
       size = 12.0;
     };
-    settings = {
-      background = "#282A36"; # Example: Dracula-like background
-      foreground = "#F8F8F2";
-      cursor     = "#F8F8F2";
-      confirm_os_window_close = 0;
-      scrollback_lines = 10000;
-      enable_audio_bell = false;
-      update_check_interval = 0;
-      tab_bar_edge = "bottom";
-      tab_bar_style = "powerline";
-      tab_powerline_style = "slanted";
-      remember_window_size = "yes"; # Persist window size
-      initial_window_width = "100c";  # Initial window width in character cells
-      initial_window_height = "40c"; # Initial window height in character cells
-    };
-    shellIntegration.enable = true; # Enable shell integration (recommended)
-    macosOptionAsAlt = lib.mkIf isMacOS "yes"; # Map Option key to Alt on macOS
+    settings = lib.mkMerge [ # Use mkMerge for combining base and conditional settings
+      { # Base settings (always applied)
+        background = "#282A36";
+        foreground = "#F8F8F2";
+        cursor     = "#F8F8F2";
+        confirm_os_window_close = 0;
+        scrollback_lines = 10000;
+        enable_audio_bell = false;
+        update_check_interval = 0;
+        tab_bar_edge = "bottom";
+        tab_bar_style = "powerline";
+        tab_powerline_style = "slanted";
+        remember_window_size = "yes";
+        initial_window_width = "100c";
+        initial_window_height = "40c";
+      }
+      # Conditionally add macOS-specific settings
+      (lib.mkIf isMacOS {
+        macos_option_as_alt = "yes"; # This is the kitty.conf option name
+      })
+    ];
+    shellIntegration.enable = true;
+    # Removed top-level macosOptionAsAlt as it's now in settings
   };
 
-  # Enable font discovery for Home Manager managed fonts, especially on Linux
-  #home.fonts.fontProfiles = lib.mkIf isLinux {
-  #  enable = true;
-  #};
+  # Font configuration for Linux (currently commented out for macOS build testing)
+  # If you uncomment this later for Linux, and it still causes issues on macOS builds,
+  # it might indicate a deeper evaluation problem or version incompatibility.
   # home.fontconfig.enable = lib.mkIf isLinux true;
-
 
   home.sessionVariables = {
     EDITOR = "nvim";
-    # UV_SYSTEM_PYTHON = "true"; # If you want uv to prefer system python when creating venvs initially
+    # UV_SYSTEM_PYTHON = "true";
   };
 
-  # Allow unfree packages (e.g., for some VS Code extensions like Copilot, Pylance)
   nixpkgs.config.allowUnfree = true;
 }

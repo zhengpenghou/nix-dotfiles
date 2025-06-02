@@ -169,7 +169,8 @@ in
   #home.fonts.fontProfiles = lib.mkIf isLinux {
   #  enable = true;
   #};
-  home.fontconfig.enable = lib.mkIf isLinux true;
+  # home.fontconfig.enable = lib.mkIf isLinux true;
+
 
   home.sessionVariables = {
     EDITOR = "nvim";

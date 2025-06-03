@@ -43,6 +43,9 @@ in
     pkgs.gcc
     pkgs.pyright pkgs.nodePackages.typescript-language-server pkgs.lua-language-server
     pkgs.marksman pkgs.stylua pkgs.nodePackages.prettier
+    # Shell enhancements
+    pkgs.starship
+    pkgs.home-manager  # Add the home-manager command to PATH
     # Fonts
     pkgs.nerd-fonts.jetbrains-mono 
     pkgs.roboto-mono
@@ -65,10 +68,46 @@ in
       if set -q KITTY_INSTALLATION_DIR
         set -x SHELL ${pkgs.fish}/bin/fish
       end
+      # Initialize starship prompt
+      starship init fish | source
       # Add a new test echo line here for the next build:
       echo "Fish config from Home Manager - Test v2" 
     '';
     # Any other Fish plugins or settings you might have
+  };
+  
+  programs.starship = {
+    enable = true;
+    settings = {
+      add_newline = true;
+      command_timeout = 1000;
+      format = "$all";
+      scan_timeout = 30;
+      character = {
+        success_symbol = "[➜](bold green)";
+        error_symbol = "[✗](bold red)";
+      };
+      directory = {
+        truncation_length = 3;
+        truncation_symbol = "…/";
+      };
+      git_branch = {
+        format = "[$symbol$branch]($style) ";
+        symbol = "🌱 ";
+      };
+      git_status = {
+        format = '([\[$all_status$ahead_behind\]]($style) )';
+        style = "bold yellow";
+      };
+      nix_shell = {
+        format = "[$symbol$state]($style) ";
+        symbol = "❄️ ";
+      };
+      cmd_duration = {
+        format = "[$duration]($style) ";
+        style = "yellow";
+      };
+    };
   };
   programs.git = { /* ... */ };
 
@@ -125,6 +164,7 @@ in
       { # Base settings merged from your new config and previous template
         # From your new settings block & extraConfig:
         shell = "${pkgs.fish}/bin/fish";  # Canonical Nix path to fish
+        term = "xterm-256color";  # More common terminal type
         allow_remote_control = true; # Was also in extraConfig, prefer typed setting
         window_padding_width = 15;   # Was also in extraConfig
         enable_audio_bell = false;   # Was also in extraConfig as 'no'

@@ -45,7 +45,7 @@ in
     pkgs.marksman pkgs.stylua pkgs.nodePackages.prettier
     # Shell enhancements
     pkgs.starship
-    pkgs.home-manager  # Add the home-manager command to PATH
+    # pkgs.home-manager is now provided by the Home Manager system itself
     # Fonts
     pkgs.nerd-fonts.jetbrains-mono 
     pkgs.roboto-mono

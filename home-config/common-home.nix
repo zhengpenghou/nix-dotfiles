@@ -45,6 +45,7 @@ in
     pkgs.marksman pkgs.stylua pkgs.nodePackages.prettier
     # Shell enhancements
     pkgs.starship
+    pkgs.direnv
     # pkgs.home-manager is now provided by the Home Manager system itself
     # Fonts
     pkgs.nerd-fonts.jetbrains-mono 
@@ -70,10 +71,28 @@ in
       end
       # Initialize starship prompt
       starship init fish | source
+      # Initialize direnv
+      direnv hook fish | source
       # Add a new test echo line here for the next build:
       echo "Fish config from Home Manager - Test v2" 
     '';
     # Any other Fish plugins or settings you might have
+  };
+  
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true; # This enables the nix-direnv integration
+    config = {
+      whitelist = {
+        prefix = [ "/Users/${config.home.username}/Projects" ];
+        exact = [ "/Users/${config.home.username}/nix-dotfiles" ];
+      };
+      warn_timeout = "10m"; # Warn if direnv takes more than 10 minutes to load
+      global = {
+        load_dotenv = true; # Load .env files automatically
+        strict_env = true; # Be strict about environment variables
+      };
+    };
   };
   
   programs.starship = {

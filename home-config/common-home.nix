@@ -29,24 +29,39 @@ in
   programs.home-manager.enable = true;
 
   home.packages = [
-    # Essentials
+    # Essentials - CLI tools used across projects
     pkgs.git pkgs.gnupg pkgs.htop pkgs.jq pkgs.ripgrep pkgs.fd pkgs.eza pkgs.bat pkgs.gh pkgs.kubectl
-    # Development Languages & Tools
-    pkgs.python311 pkgs.uv
-    pkgs.nodejs_20 pkgs.pnpm
-    pkgs.go
-    # IDEs / Editors / Terminals (vscode-insiders is handled by programs.vscode.package)
-    # pkgs.cursor # If packaged, add here
+    
+    # Core development tools - keep minimal versions of languages for quick scripts
+    # Full development environments should be managed per-project with direnv
+    pkgs.python311 # Keep a basic Python for scripts and simple tasks
+    # pkgs.nodejs_20 # Moved to per-project environments
+    # pkgs.go # Moved to per-project environments
+    
+    # Package managers - useful to have globally
+    pkgs.uv # Python package manager
+    pkgs.pnpm # Node.js package manager
+    
+    # Editors and terminals
     pkgs.neovim
     pkgs.kitty
-    # Neovim/LazyVim dependencies & LSPs
-    pkgs.gcc
-    pkgs.pyright pkgs.nodePackages.typescript-language-server pkgs.lua-language-server
-    pkgs.marksman pkgs.stylua pkgs.nodePackages.prettier
+    
+    # LSPs and formatters for editor integration
+    # These provide IDE features even when working outside project environments
+    pkgs.gcc # Needed for many language servers
+    pkgs.pyright # Python LSP
+    pkgs.nodePackages.typescript-language-server # TypeScript LSP
+    pkgs.lua-language-server # Lua LSP
+    pkgs.rust-analyzer # Rust LSP (without full Rust toolchain)
+    pkgs.marksman # Markdown LSP
+    pkgs.stylua # Lua formatter
+    pkgs.nodePackages.prettier # General formatter
+    
     # Shell enhancements
-    pkgs.starship
-    pkgs.direnv
+    pkgs.starship # Prompt
+    pkgs.direnv # Per-project environments
     # pkgs.home-manager is now provided by the Home Manager system itself
+    
     # Fonts
     pkgs.nerd-fonts.jetbrains-mono 
     pkgs.roboto-mono

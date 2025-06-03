@@ -63,7 +63,8 @@ in
     # pkgs.home-manager is now provided by the Home Manager system itself
     
     # Fonts
-    pkgs.nerd-fonts.jetbrains-mono 
+    pkgs.nerd-fonts.jetbrains-mono
+    pkgs.nerd-fonts.fira-code
     pkgs.roboto-mono
   ] ++ windsurfPackages;
 
@@ -145,40 +146,40 @@ in
   };
   programs.git = { /* ... */ };
 
-  #programs.vscode = {
-  #  enable = true;
-  #  package = vscodeInsidersPackage; # This installs the specified package
-  #  commandName = "code-insiders";
-  #  # Updated paths for extensions and userSettings for HM 25.05+
-  #  profiles.default = {
-  #    extensions = commonExtensions;
-  #    userSettings = {
-  #      "workbench.colorTheme" = "Default Light Modern";
-  #      "redhat.telemetry.enabled" = false;
-  #      "github.copilot.advanced" = {};
-  #      "github.copilot.chat.followUps" = "always";
-  #      "github.copilot.chat.localeOverride" = "en";
-  #      "github.copilot.nextEditSuggestions.enabled" = true;
-  #      "github.copilot.chat.codesearch.enabled" = true;
-  #      "github.copilot.chat.agent.thinkingTool" = true;
-  #      "github.copilot.chat.generateTests.codeLens" = true;
-  #      "github.copilot.chat.languageContext.fix.typescript.enabled" = true;
-  #      "github.copilot.chat.languageContext.inline.typescript.enabled" = true;
-  #      "github.copilot.chat.languageContext.typescript.enabled" = true;
-  #      "github.copilot.chat.codeGeneration.useInstructionFiles" = true;
-  #      "roo-cline.allowedCommands" = [ "npm test" "npm install" "tsc" "git log" "git diff" "git show" "cat" ];
-  #      "editor.fontFamily" = "'JetBrainsMono Nerd Font', 'monospace'";
-  #      "editor.formatOnSave" = true;
-  #      "files.autoSave" = "afterDelay";
-  #      "workbench.startupEditor" = "none";
-  #      "[nix]" = { "editor.defaultFormatter" = "bbenoist.nix"; };
-  #      "[python]" = { "editor.defaultFormatter" = "charliermarsh.ruff"; };
-  #      "[rust]" = { "editor.defaultFormatter" = "rust-lang.rust-analyzer"; };
-  #      "[typescript]" = { "editor.defaultFormatter" = "esbenp.prettier-vscode"; };
-  #      "[go]" = { "editor.defaultFormatter" = "golang.go"; "editor.formatOnSave" = true; };
-  #    };
-  #  };
-  #};
+  programs.vscode = {
+    enable = true;
+    package = vscodeInsidersPackage; # This installs the specified package
+    commandName = "code-insiders";
+    # Updated paths for extensions and userSettings for HM 25.05+
+    profiles.default = {
+      extensions = commonExtensions;
+      userSettings = {
+        "workbench.colorTheme" = "Default Light Modern";
+        "redhat.telemetry.enabled" = false;
+        "github.copilot.advanced" = {};
+        "github.copilot.chat.followUps" = "always";
+        "github.copilot.chat.localeOverride" = "en";
+        "github.copilot.nextEditSuggestions.enabled" = true;
+        "github.copilot.chat.codesearch.enabled" = true;
+        "github.copilot.chat.agent.thinkingTool" = true;
+        "github.copilot.chat.generateTests.codeLens" = true;
+        "github.copilot.chat.languageContext.fix.typescript.enabled" = true;
+        "github.copilot.chat.languageContext.inline.typescript.enabled" = true;
+        "github.copilot.chat.languageContext.typescript.enabled" = true;
+        "github.copilot.chat.codeGeneration.useInstructionFiles" = true;
+        "roo-cline.allowedCommands" = [ "npm test" "npm install" "tsc" "git log" "git diff" "git show" "cat" ];
+        "editor.fontFamily" = "'JetBrainsMono Nerd Font', 'monospace'";
+        "editor.formatOnSave" = true;
+        "files.autoSave" = "afterDelay";
+        "workbench.startupEditor" = "none";
+        "[nix]" = { "editor.defaultFormatter" = "bbenoist.nix"; };
+        "[python]" = { "editor.defaultFormatter" = "charliermarsh.ruff"; };
+        "[rust]" = { "editor.defaultFormatter" = "rust-lang.rust-analyzer"; };
+        "[typescript]" = { "editor.defaultFormatter" = "esbenp.prettier-vscode"; };
+        "[go]" = { "editor.defaultFormatter" = "golang.go"; "editor.formatOnSave" = true; };
+      };
+    };
+  };
 
   programs.neovim = { /* ... */ };
 	xdg.configFile."nvim" = {
@@ -189,9 +190,9 @@ in
     programs.kitty = {
     enable = true;
     font = {
-      name = "Roboto Mono"; # From your new config
-      package = pkgs.roboto-mono; # Ensures this font is available
-      size = 15;
+      name = "FiraCode Nerd Font Mono";
+      package = pkgs.nerd-fonts.fira-code; # Ensures this font is available
+      size = 16;
     };
 
     settings = lib.mkMerge [

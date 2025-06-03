@@ -61,6 +61,10 @@ in
       set -x EDITOR nvim
       alias ls='eza --git --icons --color=always'
       alias cat='bat --paging=never'
+      # Fix SHELL variable in kitty terminal
+      if set -q KITTY_INSTALLATION_DIR
+        set -x SHELL ${pkgs.fish}/bin/fish
+      end
       # Add a new test echo line here for the next build:
       echo "Fish config from Home Manager - Test v2" 
     '';

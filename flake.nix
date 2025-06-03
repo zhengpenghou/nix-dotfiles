@@ -47,6 +47,22 @@
 
     in
     {
+      # --- Standalone Home Manager Configurations ---
+      homeConfigurations = nixpkgs.lib.mapAttrs'
+        (hostname: hostEntry: nixpkgs.lib.nameValuePair "${hostEntry.username}@${hostname}" (
+          home-manager.lib.homeManagerConfiguration {
+            pkgs = import nixpkgs {
+              system = hostEntry.system;
+              config.allowUnfree = true;
+            };
+            extraSpecialArgs = mkSpecialArgs hostEntry;
+            modules = [
+              ./home-config/common-home.nix
+            ];
+          }
+        ))
+        hosts;
+
       # --- macOS System Configurations (using nix-darwin) ---
       darwinConfigurations = nixpkgs.lib.mapAttrs'
         (hostname: hostEntry: nixpkgs.lib.nameValuePair hostname (

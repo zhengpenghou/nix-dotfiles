@@ -149,7 +149,6 @@ in
   programs.vscode = {
     enable = true;
     package = vscodeInsidersPackage; # This installs the specified package
-    commandName = "code-insiders";
     # Updated paths for extensions and userSettings for HM 25.05+
     profiles.default = {
       extensions = commonExtensions;

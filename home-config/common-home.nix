@@ -81,6 +81,11 @@ in
       set -x EDITOR nvim
       alias ls='eza --git --icons --color=always'
       alias cat='bat --paging=never'
+      if test -d /opt/homebrew/bin
+        # For Apple Silicon Macs
+        fish_add_path /opt/homebrew/bin
+        fish_add_path /opt/homebrew/sbin
+      end
       # Fix SHELL variable in kitty terminal
       if set -q KITTY_INSTALLATION_DIR
         set -x SHELL ${pkgs.fish}/bin/fish

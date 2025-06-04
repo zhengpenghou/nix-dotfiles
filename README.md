@@ -1,16 +1,16 @@
-# **macOS Environment with Nix, Nix-Darwin, and Flakes**
+# **Environment with Nix, Nix-Darwin, and Flakes**
 
-This document outlines the setup, maintenance, and management of this macOS environment, which is declaratively configured using Nix, [Nix-Darwin](https://github.com/LnL7/nix-darwin), and [Nix Flakes](https://nixos.wiki/wiki/Flakes). This approach aims for a reproducible, robust, and customizable system.
+This document outlines the setup, maintenance, and management of my macOS and Linux based machines using Nix, [Nix-Darwin](https://github.com/LnL7/nix-darwin), and [Nix Flakes](https://nixos.wiki/wiki/Flakes). This approach aims for a reproducible, robust, and customizable system. 
 
 **Key Repository Files:**
 
 * `flake.nix`: Defines dependencies (Nixpkgs, Nix-Darwin, Home-Manager, etc.) and outputs (Nix-Darwin system configurations, Home-Manager user configurations).  
 * `flake.lock`: Pins the exact versions of all dependencies for reproducibility.  
-* `system-config/`: Directory containing Nix-Darwin system configurations (e.g., `system-config/moose/darwin-configuration.nix`).  
-* `home-config/`: Directory containing Home-Manager configurations (e.g., `home-config/common-home.nix`).  
+* `system-config/`: Directory containing OS specific configurations (e.g., `system-config/moose/darwin-configuration.nix`).  
+* `home-config/`: Directory containing Home-Manager configurations, with which tends to keep all my user related configurations the same across different macines.  (e.g., `home-config/common-home.nix`).
 * `README.md`: This file.
 
-## **I. Initial Installation (How This System Was Set Up)**
+## **I. Initial Installation (Focused on the setup on macOS mostly, for my linux based laptop, its been switch to NixOS)**
 
 This setup was established by following these general steps:
 

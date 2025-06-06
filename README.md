@@ -10,6 +10,34 @@ This document outlines the setup, maintenance, and management of my macOS and Li
 * `home-config/`: Directory containing Home-Manager configurations, with which tends to keep all my user related configurations the same across different macines.  (e.g., `home-config/common-home.nix`).
 * `README.md`: This file.
 
+## **Custom Home Directory Setup**
+
+If your home directory is not in the standard location (e.g., `/Users/username` on macOS), you need to:
+
+1. Set the correct home directory in your host configuration in `flake.nix`:
+   ```nix
+   "your-host" = {
+     system = "aarch64-darwin";
+     username = "yourusername";
+     configModulePath = ./system-config/your-host/darwin-configuration.nix;
+     type = "darwin";
+     homeDirectory = "/path/to/your/home";
+   };
+   ```
+
+2. Update your system configuration to use the correct home directory:
+   ```nix
+   users.users.${currentUser} = {
+     name = currentUser;
+     home = "/path/to/your/home";
+     shell = pkgs.fish;
+   };
+   ```
+
+3. Make sure the home directory setting in `common-home.nix` is commented out to allow the flake to override it.
+
+This is particularly important for home-manager to work correctly with non-standard home directory paths.
+
 ## **I. Initial Installation (Focused on the setup on macOS mostly, for my linux based laptop, its been switch to NixOS)**
 
 This setup was established by following these general steps:
@@ -32,6 +60,32 @@ This setup was established by following these general steps:
      ```
 
      (Note: Newer Nix versions might enable this by default or Nix-Darwin handles it).  
+
+### Using Determinate Systems Nix Installer
+
+The Determinate Systems Nix installer is recommended for macOS as it provides better integration with the system:
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+```
+
+After installation, you may need to restart your shell or source the Nix profile:
+
+```bash
+. /nix/var/nix/profiles/default/etc/profile.d/nix.sh
+```
+
+#### Integrating with nix-darwin
+
+When using the Determinate Systems Nix installer with nix-darwin, you need to disable nix-darwin's Nix management to avoid conflicts:
+
+```nix
+# In your darwin-configuration.nix
+nix.enable = false;  # Disable nix-darwin's Nix management
+```
+
+This allows the Determinate Systems installer to manage Nix itself, while nix-darwin manages the rest of your system configuration.
+
 3. **Clone This Configuration Repository:**  
    Replace `<your-flake-repo-url>` with the actual URL and choose a local path (e.g., `~/nix-dotfiles`).  
    ```bash

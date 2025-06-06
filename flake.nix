@@ -25,7 +25,7 @@
           type = "darwin";
         };
         "fiesty" = {
-          system = "x86_64-darwin";
+          system = "aarch64-darwin";
           username = "zp";
           configModulePath = ./system-config/fiesty/darwin-configuration.nix;
           type = "darwin";

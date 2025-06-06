@@ -30,12 +30,12 @@
           configModulePath = ./system-config/fiesty/darwin-configuration.nix;
           type = "darwin";
         };
-        "nano" = {
-          system = "x86_64-linux";
-          username = "zp";
-          configModulePath = ./system-config/nano/configuration.nix;
-          type = "nixos";
-        };
+        # "nano" = {
+        #   system = "x86_64-linux";
+        #   username = "zp";
+        #   configModulePath = ./system-config/nano/configuration.nix;
+        #   type = "nixos";
+        # };
         # ... other hosts ...
       };
 

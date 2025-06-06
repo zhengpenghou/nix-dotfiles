@@ -1,5 +1,5 @@
-# ~/nix-dotfiles/system-config/moose/darwin-configuration.nix
-{ config, pkgs, lib, inputs, currentUser, currentSystemType, ... }: # currentUser will be "zhengpenghou"
+# ~/nix-dotfiles/system-config/fiesty/darwin-configuration.nix
+{ config, pkgs, lib, inputs, currentUser, currentSystemType, ... }: # currentUser will be "zp" on Mac mini M2
 {
   # List macOS system packages if any (most user apps go in common-home.nix)
   environment.systemPackages = with pkgs; [
@@ -53,8 +53,8 @@
   services.openssh.enable = true;
   # services.openssh.permitRootLogin = "no"; # Example further sshd config
 
-  # Enable Touch ID for sudo (using the new option name)
-  security.pam.services.sudo_local.touchIdAuth = true; # Corrected option name
+  # No Touch ID available on Mac mini
+  # security.pam.services.sudo_local.touchIdAuth = false;
 
   # Allow unfree packages system-wide if needed for system packages or services
   nixpkgs.config.allowUnfree = true;

@@ -24,7 +24,8 @@ in
 {
   home.stateVersion = "25.05";
   home.username = currentUser;
-  home.homeDirectory = if isMacOS then "/Users/${currentUser}" else "/home/${currentUser}";
+  # Let flake.nix override this if needed
+  # home.homeDirectory = if isMacOS then "/Users/${currentUser}" else "/home/${currentUser}";
 
   programs.home-manager.enable = true;
 

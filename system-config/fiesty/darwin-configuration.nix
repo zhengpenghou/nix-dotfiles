@@ -42,7 +42,7 @@
   # Home Manager will then configure this user's environment.
   users.users.${currentUser} = {
     name = currentUser;
-    home = "/Users/${currentUser}";
+    home = "/Volumes/User";
     shell = pkgs.fish; # System default login shell for the user
   };
 

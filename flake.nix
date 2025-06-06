@@ -29,6 +29,7 @@
           username = "zp";
           configModulePath = ./system-config/fiesty/darwin-configuration.nix;
           type = "darwin";
+          homeDirectory = "/Volumes/User";
         };
         # "nano" = {
         #   system = "x86_64-linux";
@@ -78,10 +79,10 @@
                 home-manager.extraSpecialArgs = mkSpecialArgs hostEntry;
                 home-manager.users.${hostEntry.username} = {
                   imports = [ ./home-config/common-home.nix ];
-                  # Optional: If common-home.nix doesn't set username/home based on currentUser,
-                  # you can set them explicitly here:
-                  # home.username = hostEntry.username;
-                  # home.homeDirectory = "/Users/${hostEntry.username}";
+                  home.username = hostEntry.username;
+                  home.homeDirectory = if hostEntry ? homeDirectory 
+                                      then hostEntry.homeDirectory
+                                      else "/Users/${hostEntry.username}";
                 };
               home-manager.backupFileExtension = "hm-backup";
               }
@@ -105,9 +106,10 @@
                 home-manager.extraSpecialArgs = mkSpecialArgs hostEntry;
                 home-manager.users.${hostEntry.username} = {
                   imports = [ ./home-config/common-home.nix ];
-                  # Optional:
-                  # home.username = hostEntry.username;
-                  # home.homeDirectory = "/home/${hostEntry.username}";
+                  home.username = hostEntry.username;
+                  home.homeDirectory = if hostEntry ? homeDirectory 
+                                      then hostEntry.homeDirectory
+                                      else "/home/${hostEntry.username}";
                 };
               home-manager.backupFileExtension = "hm-backup";
               }

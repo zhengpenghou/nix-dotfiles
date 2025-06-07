@@ -2,11 +2,22 @@
 
 This document outlines the setup, maintenance, and management of my macOS and Linux based machines using Nix, [Nix-Darwin](https://github.com/LnL7/nix-darwin), and [Nix Flakes](https://nixos.wiki/wiki/Flakes). This approach aims for a reproducible, robust, and customizable system. 
 
-**Key Repository Files:**
+## **Nix-Darwin Configuration**
 
-* `flake.nix`: Defines dependencies (Nixpkgs, Nix-Darwin, Home-Manager, etc.) and outputs (Nix-Darwin system configurations, Home-Manager user configurations).  
-* `flake.lock`: Pins the exact versions of all dependencies for reproducibility.  
-* `system-config/`: Directory containing OS specific configurations (e.g., `system-config/moose/darwin-configuration.nix`).  
+This repository contains my personal Nix configuration for macOS and Linux systems, using nix-darwin for macOS and home-manager for both platforms.
+
+## **Environment Management Approach**
+
+This configuration uses a hybrid approach to environment management:
+
+1. **Global CLI tools and shell environment**: Managed declaratively via nix-darwin and home-manager
+2. **Per-project isolated environments**: Managed with direnv and shell.nix templates
+3. **GUI applications**: Managed via Homebrew due to limitations of native Nix packages on macOS
+
+## **Repository Structure**
+
+* `flake.nix`: The main entry point for the Nix flake, defining inputs and outputs.
+* `system-config/`: Directory containing system-specific configurations (e.g., `system-config/moose/darwin-configuration.nix`).
 * `home-config/`: Directory containing Home-Manager configurations, with which tends to keep all my user related configurations the same across different macines.  (e.g., `home-config/common-home.nix`).
 * `README.md`: This file.
 
@@ -85,6 +96,73 @@ nix.enable = false;  # Disable nix-darwin's Nix management
 ```
 
 This allows the Determinate Systems installer to manage Nix itself, while nix-darwin manages the rest of your system configuration.
+
+## Daily Maintenance Workflow
+
+### Updating Your System
+
+1. **Update Flake Inputs**:
+   ```bash
+   # Update all inputs
+   nix flake update
+   # Or update specific inputs
+   nix flake lock --update-input nixpkgs
+   ```
+
+2. **Build and Activate Configuration**:
+   ```bash
+   # For macOS (replace 'moose' with your hostname)
+   darwin-rebuild switch --flake .#moose
+   ```
+
+3. **For Custom Home Directory Setups** (like fiesty with `/Volumes/User`):
+   ```bash
+   # If you encounter permission issues, use the two-step approach:
+   nix build .#darwinConfigurations.fiesty.system
+   sudo ./result/sw/bin/darwin-rebuild switch --flake .
+   ```
+
+### Managing Per-Project Environments
+
+1. **Create a new project environment**:
+   ```bash
+   # Copy a template shell.nix to your project
+   cp ~/nix-dotfiles/templates/dev-shells/nodejs.nix ./shell.nix
+   # Create .envrc file
+   echo "use nix" > .envrc
+   # Allow direnv
+   direnv allow
+   ```
+
+2. **Available templates** in `~/nix-dotfiles/templates/dev-shells/`:
+   - `nodejs.nix`: Node.js development environment
+   - `python.nix`: Python development environment
+   - `rust.nix`: Rust development environment
+   - `go.nix`: Go development environment
+   - `fullstack.nix`: Full-stack development environment
+
+### Troubleshooting
+
+1. **If Nix commands are not found in shell**:
+   ```bash
+   # For zsh
+   source /nix/var/nix/profiles/default/etc/profile.d/nix.sh
+   # For fish
+   # This should be handled automatically in common-home.nix
+   ```
+
+2. **If activation fails with permission errors**:
+   ```bash
+   # Try with sudo
+   sudo darwin-rebuild switch --flake .#moose
+   
+   # Or use the two-step approach if needed
+   nix build .#darwinConfigurations.moose.system
+   sudo ./result/sw/bin/darwin-rebuild switch --flake .
+   ```
+
+3. **If home-manager reports home directory mismatch**:
+   Ensure your host configuration in `flake.nix` has the correct `homeDirectory` attribute and that it's properly used in the home-manager configuration.
 
 3. **Clone This Configuration Repository:**  
    Replace `<your-flake-repo-url>` with the actual URL and choose a local path (e.g., `~/nix-dotfiles`).  

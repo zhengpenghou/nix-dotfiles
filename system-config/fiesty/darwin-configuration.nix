@@ -59,8 +59,7 @@
   # No Touch ID available on Mac mini
   # security.pam.services.sudo_local.touchIdAuth = false;
 
-  # Allow unfree packages system-wide if needed for system packages or services
-  nixpkgs.config.allowUnfree = true;
+  # Allow unfree packages system-wide is already declared above
 
   # fonts.fontDir.enable is no longer needed or effective.
   # Fonts installed by Home Manager (e.g., to ~/.nix-profile/share/fonts or ~/Library/Fonts)

@@ -327,5 +327,5 @@ in
   # home.fontconfig.enable = lib.mkIf isLinux true;
 
   home.sessionVariables = { EDITOR = "nvim"; };
-  nixpkgs.config.allowUnfree = true;
+  # nixpkgs.config.allowUnfree is already declared above
 }

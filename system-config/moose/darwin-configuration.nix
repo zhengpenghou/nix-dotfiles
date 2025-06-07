@@ -20,6 +20,9 @@
   # You might want to add other nix.settings here, for example:
   # nix.settings.build-users-group = "nixbld";
 
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.bash.enable = true; # Even if you use fish, some scripts might expect bash
   programs.fish.enable = true; # Enable fish shell globally if desired

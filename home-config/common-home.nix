@@ -28,6 +28,9 @@ in
   # home.homeDirectory = if isMacOS then "/Users/${currentUser}" else "/home/${currentUser}";
 
   programs.home-manager.enable = true;
+  
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
 
   home.packages = [
     # Essentials - CLI tools used across projects
